@@ -1,0 +1,17 @@
+<div class="buffer-message">
+  <p>Waiting for stream to buffer...</p>
+</div>
+
+<div class="watch">
+  <a href="<%= streamURL %>">Watch Now</a>
+</div>
+
+<script>
+  var streamURL = "<%= streamURL %>";
+  $(document).ready(function() {
+    setTimeout(function(){
+      $('.buffer-message').hide();
+      $('.watch').show();
+    }, 3000);
+  });
+</script>

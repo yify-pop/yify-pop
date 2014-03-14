@@ -1,0 +1,11 @@
+.watch {
+  display:none;
+}
+
+#movies .movie img {
+  max-width: 120px;
+}
+
+#navbar-collapse > form > .input-group {
+  max-width:250px;
+}

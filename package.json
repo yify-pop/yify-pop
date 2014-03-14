@@ -1,0 +1,15 @@
+{
+  "name": "yify-pop",
+  "version": "0.0.1",
+  "author": "",
+  "dependencies": {
+    "request": "*",
+    "executive": "*",
+    "child": "*",
+    "getport": "*"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "0.8.x"
+  }
+}
