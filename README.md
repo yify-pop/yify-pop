@@ -15,6 +15,12 @@ Install from http://nodejs.org/
 [sudo] npm -g install geddy
 ```
 
+***Peerflix 0.2.x***
+
+```
+[sudo] npm -g install peerflix
+```
+
 Getting Started
 ---------------
 1. Open a command line and change to the directory
