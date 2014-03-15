@@ -1,3 +1,4 @@
+<% if (streams && streams.length > 0) { %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -18,3 +19,7 @@
   <% } %>
   </tbody>
 </table>
+
+<% } else { %>
+  <p class="lead">No active torrents.</p>
+<% } %>

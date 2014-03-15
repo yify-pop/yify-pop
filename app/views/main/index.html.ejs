@@ -1,21 +1,25 @@
 <div id="movies">
-  <div class="row">
-  <% for (var i=0; i < movies.length; i++) { %>
-      <div class="col-sm-4">
-        <div class="media movie">
-          <a class="pull-left" href="-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
-            <img class="media-object" src="<%= movies[i].CoverImage %>" alt="<%= movies[i].MovieTitleClean %>">
-          </a>
-          <div class="media-body">
-            <h4 class="media-heading"><%= movies[i].MovieTitleClean %></h4>
-            <p><a class="btn btn-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">Watch</a></p>
-            <p><a class="btn btn-warning" href="<%= movies[i].ImdbLink %>">View on IMDB</a></p>
+  <% if (movies && movies.length > 0) { %>
+    <div class="row">
+    <% for (var i=0; i < movies.length; i++) { %>
+        <div class="col-sm-4">
+          <div class="media movie">
+            <a class="pull-left" href="-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
+              <img class="media-object" src="<%= movies[i].CoverImage %>" alt="<%= movies[i].MovieTitleClean %>">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading"><%= movies[i].MovieTitleClean %></h4>
+              <p><a class="btn btn-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">Watch</a></p>
+              <p><a class="btn btn-sm btn-warning" href="<%= movies[i].ImdbLink %>">View on IMDB</a></p>
+            </div>
           </div>
         </div>
-      </div>
-    <% if (i % 3 === 2) { %>
-      </div><div class="row">
+      <% if (i % 3 === 2) { %>
+        </div><div class="row">
+      <% } %>
     <% } %>
+  <% } else { %>
+    <p class="lead">No results found.</p>
   <% } %>
 </div>
 <ul class="pager">
