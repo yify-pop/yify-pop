@@ -89,45 +89,65 @@ var Main = function () {
   this.stream = function (req, resp, params) {
     var self = this;
 
-    var portfinder = require('portfinder');
+    var streamURL = false;
 
-    var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host;
-
-    var getport = require('getport');
-
-    getport(8889, 8999, function (e, port) {
-      if (e) {
-        self.redirect('/');
-      } else {
-        var exec = require('executive');
-
-        var childStream = require('child')({
-          command: 'peerflix',
-          args: [decodeURIComponent(params.file),  '--port=' + port],
-          cbStdout: function(data){ console.log('out '+data)}
-        });
-
-        var streamURL = "http://" + hostname + ":" + port;
-
-        childStream.start(function(pid){
-          console.log('apacheTail is now up with pid: '+ pid);
-          geddy.config.streamingProcesses.push({
-            pid: pid,
-            child: childStream,
-            torrent: decodeURIComponent(params.file),
-            stream: streamURL
-          });
-        });
-
-        self.respond({
-          params: params,
-          streamURL: streamURL
-        }, {
-          format: 'html',
-          template: 'app/views/main/stream'
-        });
+    for (var i=0; i < geddy.config.streamingProcesses.length; i++) {
+      if (decodeURIComponent(params.file) === geddy.config.streamingProcesses[i].torrent) {
+        streamURL = geddy.config.streamingProcesses[i].stream;
       }
-    });
+    }
+
+    // Check if there is already a stream running for this torrent
+    if (streamURL) {
+      self.respond({
+        params: params,
+        streamURL: streamURL
+      }, {
+        format: 'html',
+        template: 'app/views/main/stream'
+      });
+    } else {
+      // Otherwise start a new stream
+      var portfinder = require('portfinder');
+
+      var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host;
+
+      var getport = require('getport');
+
+      getport(8889, 8999, function (e, port) {
+        if (e) {
+          self.redirect('/');
+        } else {
+          var childStream = require('child')({
+            command: 'peerflix',
+            args: [decodeURIComponent(params.file),  '--port=' + port],
+            cbStdout: function(data) {
+              console.log(String(data));
+            }
+          });
+
+          streamURL = "http://" + hostname + ":" + port;
+
+          childStream.start(function(pid){
+            console.log('Child stream is now up with pid: '+ pid);
+            geddy.config.streamingProcesses.push({
+              pid: pid,
+              child: childStream,
+              torrent: decodeURIComponent(params.file),
+              stream: streamURL
+            });
+          });
+
+          self.respond({
+            params: params,
+            streamURL: streamURL
+          }, {
+            format: 'html',
+            template: 'app/views/main/stream'
+          });
+        }
+      });
+    }
   };
 
   this.running = function (req, resp, params) {
