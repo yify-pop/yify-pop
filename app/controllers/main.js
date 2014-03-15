@@ -20,6 +20,7 @@ var Main = function () {
   this.index = function (req, resp, params) {
     var self = this;
     var request = require('request');
+    var baseURL = "http://" + req.headers.host;
     var sort = 'date';
     var genre = 'all';
 
@@ -37,17 +38,46 @@ var Main = function () {
       search = '&keywords=' + params.search;
     }
 
-    request('http://yts.re/api/list.json?sort=' + sort + '&genre=' + genre + search, function (error, response, body) {
+    var oldURL = 'http://' + req.headers.host + '?sort=' + sort + '&genre=' + genre + search;
+
+    var set = '&set=1';
+    var previousDisabled = 'disabled';
+    var nextDisabled = '';
+    var page = 1;
+    var previousPage = '#';
+    var nextPage = oldURL + '&set=' + (page + 1);
+
+    if (params.set && params.set !== '') {
+      set = '&set=' + params.set;
+      page = parseInt(params.set);
+
+      previousPage = oldURL + '&set=' + (page - 1);
+
+      if (page > 1) {
+        previousDisabled = '';
+      }
+
+      nextPage = oldURL + '&set=' + (page + 1);
+    }
+
+    request('http://yts.re/api/list.json?limit=18&quality=720p&sort=' + sort + '&genre=' + genre + search + set, function (error, response, body) {
       if (!error && response.statusCode == 200) {
 
         var yifyResponse = JSON.parse(body);
 
-        var baseURL = "http://" + req.headers.host;
+        if (yifyResponse.MovieCount < (page * 18)) {
+          nextDisabled = 'disabled';
+          nextPage = '#';
+        }
 
         self.respond({
           params: params,
           movies: yifyResponse.MovieList,
-          baseURL: baseURL
+          baseURL: baseURL,
+          previousPage: previousPage,
+          nextPage: nextPage,
+          previousDisabled: previousDisabled,
+          nextDisabled: nextDisabled
         }, {
           format: 'html',
           template: 'app/views/main/index'
@@ -71,15 +101,27 @@ var Main = function () {
       } else {
         var exec = require('executive');
 
-        child = exec.quiet('peerflix ' + decodeURIComponent(params.file) + ' --port=' + port);
+        var childStream = require('child')({
+          command: 'peerflix',
+          args: [decodeURIComponent(params.file),  '--port=' + port],
+          cbStdout: function(data){ console.log('out '+data)}
+        });
 
-        child.stdout.on('data', function(data) {
-          console.log(data);
+        var streamURL = "http://" + hostname + ":" + port;
+
+        childStream.start(function(pid){
+          console.log('apacheTail is now up with pid: '+ pid);
+          geddy.config.streamingProcesses.push({
+            pid: pid,
+            child: childStream,
+            torrent: decodeURIComponent(params.file),
+            stream: streamURL
+          });
         });
 
         self.respond({
           params: params,
-          streamURL: "http://" + hostname + ":" + port
+          streamURL: streamURL
         }, {
           format: 'html',
           template: 'app/views/main/stream'
@@ -87,6 +129,37 @@ var Main = function () {
       }
     });
   };
+
+  this.running = function (req, resp, params) {
+    var self = this;
+
+    console.log(geddy.config.streamingProcesses);
+
+      self.respond({
+        params: params,
+        streams: geddy.config.streamingProcesses
+      }, {
+        format: 'html',
+        template: 'app/views/main/running'
+      });
+  };
+
+  this.kill = function (req, resp, params) {
+    var self = this;
+
+    if (params.pid && params.pid !== '') {
+      for (var i=0; i < geddy.config.streamingProcesses.length; i++) {
+        if (geddy.config.streamingProcesses[i].pid == params.pid) {
+          geddy.config.streamingProcesses[i].child.stop();
+          geddy.config.streamingProcesses.splice(i, 1);
+          console.log('Child is now stopped.');
+        }
+      }
+    }
+
+    self.redirect('/running');
+  };
 };
+
 
 exports.Main = Main;

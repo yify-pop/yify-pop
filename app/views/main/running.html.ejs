@@ -1,0 +1,20 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>PID</th>
+      <th>Torrent</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for (var i=0; i < streams.length; i++) { %>
+      <tr>
+        <td><%= streams[i].pid %></td>
+        <td><%= streams[i].torrent %></td>
+        <td><a class="btn btn-success" href="<%= streams[i].stream %>">Watch</a></td>
+        <td><a class="btn btn-danger" href="/kill?pid=<%= streams[i].pid %>">Kill</a></td>
+      </tr>
+  <% } %>
+  </tbody>
+</table>
