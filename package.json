@@ -5,7 +5,7 @@
   "dependencies": {
     "request": "*",
     "child": "*",
-    "portfinder": "*"
+    "getport": "*"
   },
   "devDependencies": {},
   "engines": {
