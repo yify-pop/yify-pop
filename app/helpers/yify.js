@@ -7,6 +7,9 @@ exports.getParams = function (params, baseURL) {
   yify.genre = 'all';
   yify.page = 1;
   yify.set = '&set=1';
+
+  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
+
   yify.previousDisabled = 'disabled';
   yify.nextDisabled = '';
   yify.previousPage = '#';
@@ -24,8 +27,6 @@ exports.getParams = function (params, baseURL) {
   if (params.search && params.search !== '') {
     yify.search = '&keywords=' + params.search;
   }
-
-  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
 
   // Update paging links
   if (params.set && params.set !== '') {

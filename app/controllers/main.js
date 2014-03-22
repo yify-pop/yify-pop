@@ -20,7 +20,6 @@ var yify = require('../helpers/yify');
 var streams = require('../helpers/streams');
 
 var Main = function () {
-  console.log(yify);
   this.index = function (req, resp, params) {
     var self = this;
     var request = require('request');
