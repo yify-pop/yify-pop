@@ -9,7 +9,7 @@
             </a>
             <div class="media-body">
               <h4 class="media-heading"><%= movies[i].MovieTitleClean %></h4>
-              <p><a class="btn btn-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">Watch</a></p>
+              <p><a class="btn btn-success" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">Watch</a></p>
               <p><a class="btn btn-sm btn-warning" href="<%= movies[i].ImdbLink %>">View on IMDB</a></p>
             </div>
           </div>

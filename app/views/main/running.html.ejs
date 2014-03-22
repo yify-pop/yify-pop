@@ -1,25 +1,24 @@
-<% if (streams && streams.length > 0) { %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>PID</th>
-      <th>Torrent</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-  <% for (var i=0; i < streams.length; i++) { %>
-      <tr>
-        <td><%= streams[i].pid %></td>
-        <td><%= streams[i].torrent %></td>
-        <td><a class="btn btn-success" href="<%= streams[i].stream %>">Watch</a></td>
-        <td><a class="btn btn-danger" href="/kill?pid=<%= streams[i].pid %>">Kill</a></td>
-      </tr>
+<div id="movies">
+  <% if (streams && streams.length > 0) { %>
+    <div class="row">
+    <% for (var i=0; i < streams.length; i++) { %>
+        <div class="col-sm-4">
+          <div class="media movie">
+            <a class="pull-left" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>">
+              <img class="media-object" src="<%= streams[i].movie.MediumCover %>" alt="<%= streams[i].movie.MovieTitleClean %>">
+            </a>
+            <div class="media-body">
+              <h4 class="media-heading"><%= streams[i].movie.MovieTitleClean %></h4>
+              <p><a class="btn btn-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>">Watch</a></p>
+              <p><a class="btn btn-danger" href="/kill?pid=<%= streams[i].pid %>">Kill</a></p>
+            </div>
+          </div>
+        </div>
+      <% if (i % 3 === 2) { %>
+        </div><div class="row">
+      <% } %>
+    <% } %>
+  <% } else { %>
+    <p class="lead">No active torrents.</p>
   <% } %>
-  </tbody>
-</table>
-
-<% } else { %>
-  <p class="lead">No active torrents.</p>
-<% } %>
+</div>

@@ -16,56 +16,24 @@
  *
 */
 
+var yify = require('../helpers/yify');
+var streams = require('../helpers/streams');
+
 var Main = function () {
+  console.log(yify);
   this.index = function (req, resp, params) {
     var self = this;
     var request = require('request');
     var baseURL = "http://" + req.headers.host;
-    var sort = 'date';
-    var genre = 'all';
 
-    if (params.sort) {
-      sort = params.sort;
-    }
+    var yifyRequest = yify.getParams(params, baseURL);
 
-    if (params.genre) {
-      genre = params.genre;
-    }
-
-    var search = '';
-
-    if (params.search && params.search !== '') {
-      search = '&keywords=' + params.search;
-    }
-
-    var oldURL = 'http://' + req.headers.host + '?sort=' + sort + '&genre=' + genre + search;
-
-    var set = '&set=1';
-    var previousDisabled = 'disabled';
-    var nextDisabled = '';
-    var page = 1;
-    var previousPage = '#';
-    var nextPage = oldURL + '&set=' + (page + 1);
-
-    if (params.set && params.set !== '') {
-      set = '&set=' + params.set;
-      page = parseInt(params.set);
-
-      previousPage = oldURL + '&set=' + (page - 1);
-
-      if (page > 1) {
-        previousDisabled = '';
-      }
-
-      nextPage = oldURL + '&set=' + (page + 1);
-    }
-
-    request('http://yts.re/api/list.json?limit=18&quality=720p&sort=' + sort + '&genre=' + genre + search + set, function (error, response, body) {
+    request(yifyRequest.url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
 
         var yifyResponse = JSON.parse(body);
 
-        if (yifyResponse.MovieCount < (page * 18)) {
+        if (yifyResponse.MovieCount < (yify.page * 18)) {
           nextDisabled = 'disabled';
           nextPage = '#';
         }
@@ -74,10 +42,10 @@ var Main = function () {
           params: params,
           movies: yifyResponse.MovieList,
           baseURL: baseURL,
-          previousPage: previousPage,
-          nextPage: nextPage,
-          previousDisabled: previousDisabled,
-          nextDisabled: nextDisabled
+          previousPage: yifyRequest.previousPage,
+          nextPage: yifyRequest.nextPage,
+          previousDisabled: yifyRequest.previousDisabled,
+          nextDisabled: yifyRequest.nextDisabled
         }, {
           format: 'html',
           template: 'app/views/main/index'
@@ -88,16 +56,17 @@ var Main = function () {
 
   this.stream = function (req, resp, params) {
     var self = this;
-
     var streamURL = false;
 
+    var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host;
+
+    // Check if there is already a stream running for this torrent
     for (var i=0; i < geddy.config.streamingProcesses.length; i++) {
       if (decodeURIComponent(params.file) === geddy.config.streamingProcesses[i].torrent) {
         streamURL = geddy.config.streamingProcesses[i].stream;
       }
     }
 
-    // Check if there is already a stream running for this torrent
     if (streamURL) {
       self.respond({
         params: params,
@@ -108,43 +77,7 @@ var Main = function () {
       });
     } else {
       // Otherwise start a new stream
-      var hostname = (req.headers.host.match(/:/g)) ? req.headers.host.slice(0, req.headers.host.indexOf(":")) : req.headers.host;
-
-      var getport = require('getport');
-
-      getport(8889, 8999, function (e, port) {
-        if (e) {
-          self.redirect('/');
-        } else {
-          var childStream = require('child')({
-            command: 'peerflix',
-            args: [decodeURIComponent(params.file),  '--port=' + port],
-            cbStdout: function(data) {
-              console.log(String(data));
-            }
-          });
-
-          streamURL = "http://" + hostname + ":" + port;
-
-          childStream.start(function(pid){
-            console.log('Child stream is now up with pid: '+ pid);
-            geddy.config.streamingProcesses.push({
-              pid: pid,
-              child: childStream,
-              torrent: decodeURIComponent(params.file),
-              stream: streamURL
-            });
-          });
-
-          self.respond({
-            params: params,
-            streamURL: streamURL
-          }, {
-            format: 'html',
-            template: 'app/views/main/stream'
-          });
-        }
-      });
+      streams.create(self, streamURL, hostname, params);
     }
   };
 
@@ -153,13 +86,14 @@ var Main = function () {
 
     console.log(geddy.config.streamingProcesses);
 
-      self.respond({
-        params: params,
-        streams: geddy.config.streamingProcesses
-      }, {
-        format: 'html',
-        template: 'app/views/main/running'
-      });
+    self.respond({
+      params: params,
+      streams: geddy.config.streamingProcesses,
+      baseURL: "http://" + req.headers.host
+    }, {
+      format: 'html',
+      template: 'app/views/main/running'
+    });
   };
 
   this.kill = function (req, resp, params) {
