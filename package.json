@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "author": "",
   "dependencies": {
-    "request": "*",
+    "request": "2.34.x",
     "child": "*",
-    "getport": "*"
+    "getport": "0.1.x"
   },
   "devDependencies": {},
   "engines": {
-    "node": "0.10.x"
+    "node": "0.10.16"
   }
 }
