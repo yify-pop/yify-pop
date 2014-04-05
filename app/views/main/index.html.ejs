@@ -4,7 +4,7 @@
     <% for (var i=0; i < movies.length; i++) { %>
         <div class="col-sm-4">
           <div class="media movie">
-            <a class="pull-left" href="-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
+            <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
               <img class="media-object" src="<%= movies[i].CoverImage %>" alt="<%= movies[i].MovieTitleClean %>">
             </a>
             <div class="media-body">

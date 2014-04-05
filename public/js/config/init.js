@@ -1,35 +1,22 @@
 // Use this file to do all of your initial setup - this will be run after
 // core/core.js and all of your models.
 
-/*
- *  to set up realtime for your specific models
- *  pass an array of model names into the method
- *  below:                                         */
-
-// geddy.io.addListenersForModels();
-
-/*
- *  example:
- *
- *  geddy.io.addListenersForModels(['Item']);
- *
- *  geddy.model.Item.on('save', function (item) {
- *    console.log(item);
- *  });
- *
- *  geddy.model.Item.on('update', function (item) {
- *    console.log(item);
- *  });
- *
- *  geddy.model.Item.on('remove', function (id) {
- *    console.log(id);
- *  });
- *
- */
 
 $(document).ready(function() {
   FastClick.attach(document.body);
+
+  var a=document.getElementsByTagName("a");
+  for (var i=0;i<a.length;i++) {
+      if(!a[i].onclick && a[i].getAttribute("target") != "_blank") {
+          a[i].onclick = protectLink;
+      }
+  }
 });
+
+var protectLink = function() {
+  window.location=this.getAttribute("href");
+  return false;
+};
 
 function getStream(){
   $.getJSON(streamURL, function(data) {
