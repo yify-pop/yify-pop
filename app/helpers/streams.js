@@ -1,14 +1,18 @@
 exports.create = function(self, streamURL, hostname, params) {
   var getport = require('getport');
   var request = require('request');
+  
+  var isWin = process.platform === 'win32';
 
   getport(8889, 8999, function (e, port) {
     if (e) {
       self.redirect('/');
     } else {
+      var osSpecificCommand = isWin ? 'cmd' : 'peerflix';
+      var osSpecificArgs = isWin ? ['/c', 'peerflix', decodeURIComponent(params.file),  '--port=' + port] : [decodeURIComponent(params.file),  '--port=' + port];
       var childStream = require('child')({
-        command: 'peerflix',
-        args: [decodeURIComponent(params.file),  '--port=' + port],
+        command: osSpecificCommand,
+        args: osSpecificArgs,
         cbStdout: function(data) {
           console.log(String(data));
         }
