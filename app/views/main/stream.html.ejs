@@ -19,7 +19,9 @@
   var streamURL = "<%= streamURL %>";
   $(document).ready(function() {
     setTimeout(function(){
-      window.location.replace(streamURL);
+      document.getElementById("player_html5_api").setAttribute("src", streamURL);
+      $('.buffer-message').hide();
+      $('#player').removeClass('hidden');
     }, 3000);
   });
 </script>
