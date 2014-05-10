@@ -19,9 +19,17 @@
   var streamURL = "<%= streamURL %>";
   $(document).ready(function() {
     setTimeout(function(){
-      document.getElementById("player_html5_api").setAttribute("src", streamURL);
-      $('.buffer-message').hide();
-      $('#player').removeClass('hidden');
+      var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+
+      if (iOS) {
+        window.location.replace(streamURL);
+      }
+      else {
+        document.getElementById("player_html5_api").setAttribute("src", streamURL);
+        $('.buffer-message').hide();
+        $('#player').removeClass('hidden');
+      }
+      
     }, 3000);
   });
 </script>
