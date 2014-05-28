@@ -8,13 +8,6 @@ exports.getParams = function (params, baseURL) {
   yify.page = 1;
   yify.set = '&set=1';
 
-  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
-
-  yify.previousDisabled = 'disabled';
-  yify.nextDisabled = '';
-  yify.previousPage = '#';
-  yify.nextPage = oldURL + '&set=' + (yify.page + 1);
-
   // Set new parameters
   if (params.sort) {
     yify.sort = params.sort;
@@ -28,6 +21,13 @@ exports.getParams = function (params, baseURL) {
     yify.search = '&keywords=' + params.search;
   }
 
+  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
+
+  yify.previousDisabled = 'disabled';
+  yify.nextDisabled = '';
+  yify.previousPage = '#';
+  yify.nextPage = oldURL + '&set=' + (yify.page + 1);
+
   // Update paging links
   if (params.set && params.set !== '') {
     yify.set = '&set=' + params.set;
@@ -39,6 +39,8 @@ exports.getParams = function (params, baseURL) {
       yify.previousDisabled = '';
     }
 
+    yify.nextPage = oldURL + '&set=' + (yify.page + 1);
+  } else {
     yify.nextPage = oldURL + '&set=' + (yify.page + 1);
   }
 
