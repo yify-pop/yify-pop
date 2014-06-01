@@ -3,22 +3,41 @@
     <div class="row">
     <% for (var i=0; i < streams.length; i++) { %>
         <div class="col-sm-4">
-          <div class="media movie">
-            <a class="pull-left" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>">
-              <img class="media-object" src="<%= streams[i].movie.MediumCover %>" alt="<%= streams[i].movie.MovieTitleClean %>">
+		<div class="panel panel-success">
+		 <div class="panel-heading ">
+			<h3 class="panel-title"><%= streams[i].movie.MovieTitleClean %></h3>
+			</div>
+			<div class="panel-body">
+			
+			<!-- img -->
+			<div class="media movie">
+            <a class="pull-left" target="_blank" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>">
+            <img class="media-object" src="<%= streams[i].movie.MediumCover %>" alt="<%= streams[i].movie.MovieTitleClean %>">
             </a>
-            <div class="media-body">
-              <h4 class="media-heading"><%= streams[i].movie.MovieTitleClean %></h4>
-              <p><a class="btn btn-success" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>">Watch</a></p>
-              <p><a class="btn btn-danger" href="/kill?pid=<%= streams[i].pid %>">Kill</a></p>
-            </div>
-          </div>
-        </div>
+			<!-- img -->
+			
+			<!-- content -->
+			<div class="media-body">
+            <p><a class="btn btn-sm btn-warning" target="_blank" href="<%= baseURL %>/stream?file=<%= encodeURIComponent(streams[i].movie.TorrentUrl) %>"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+            <p><a class="btn btn-xs btn-danger" href="/kill?pid=<%= streams[i].pid %>"><span class="glyphicon glyphicon-remove"></span> DELETE</a></p>
+			<!-- content -->
+			<div class="well well-sm">	
+			Seeds: <%= streams[i].movie.TorrentSeeds %><br>
+			Peers: <%= streams[i].movie.TorrentPeers %>
+			</div>		
+			</div>
+        </div>	
+		</div>
+		</div>
+
+</div>				
       <% if (i % 3 === 2) { %>
-        </div><div class="row">
+        </div>
+		<div class="row">
       <% } %>
     <% } %>
   <% } else { %>
     <p class="lead">No active torrents.</p>
   <% } %>
-</div>
+</div>	
+		</div>
