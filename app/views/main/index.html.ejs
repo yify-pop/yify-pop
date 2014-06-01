@@ -2,18 +2,29 @@
   <% if (movies && movies.length > 0) { %>
     <div class="row">
     <% for (var i=0; i < movies.length; i++) { %>
-        <div class="col-sm-4">
-          <div class="media movie">
-            <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
-              <img class="media-object" src="<%= movies[i].CoverImage %>" alt="<%= movies[i].MovieTitleClean %>">
-            </a>
-            <div class="media-body">
-              <h4 class="media-heading"><%= movies[i].MovieTitleClean %></h4>
-              <p><a class="btn btn-success" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">Watch</a></p>
-              <p><a class="btn btn-sm btn-warning" href="<%= movies[i].ImdbLink %>">View on IMDB</a></p>
-            </div>
-          </div>
-        </div>
+        <div class="col-sm-4">  
+		
+		<div class="panel panel-default">
+		<div class="panel-heading">
+		<h3 class="panel-title"><%= movies[i].MovieTitleClean %></h3></div>
+		<div class="panel-body">
+        
+		<div class="media movie">
+        <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
+        <img class="media-object" src="<%= movies[i].CoverImage %>" alt="<%= movies[i].MovieTitleClean %>"></a>
+		
+		<div class="media-body">
+		<p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+        <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?<%= movies[i].ImdbLink %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
+
+		<div class="well well-sm">
+		Rating: <%= movies[i].MovieRating %><br>
+		Genre: <%= movies[i].Genre %><br>
+		Health: <span class="label label-default">S: <%= movies[i].TorrentSeeds %></span> <span class="label label-default">P: <%= movies[i].TorrentPeers %></span>
+		</div>
+		
+		</div></div></div></div></div>
+
       <% if (i % 3 === 2) { %>
         </div><div class="row">
       <% } %>
