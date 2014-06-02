@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="jumbotron align-center">
+      <img src="<%= show.images.banner %>" alt="<%= show.title %>" />
+    </div>
+  </div>
+</div>
+
+<div class="panel-group" id="show">
+  <% if (seasons && seasons.length > 0) { %>
+    <% for (var i=0; i < seasons.length; i++) { %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#show" href="#season-<%= i + 1 %>">
+              Season <%= i + 1 %>
+            </a>
+          </h4>
+        </div>
+        <div id="season-<%= i + 1 %>" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="row">
+              <% if (seasons[i] && seasons[i].length > 0) { %>
+                <% for (var j=0; j < seasons[i].length; j++) { %>
+                    <% var season = i+1; %>
+                    <% var episode = j+1; %>
+                    <div class="col-sm-4">
+                      <%= partial('episode', {episode: seasons[i][j], baseURL: baseURL, imdb_id: show.imdb_id, moment: moment}); %>
+                    </div>
+                    <% if (j % 3 === 2) { %>
+                      </div><div class="row">
+                    <% } %>
+                <% } %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  <% } else { %>
+    <p class="lead">No results found.</p>
+  <% } %>
+</div>

@@ -1,0 +1,35 @@
+<div id="shows">
+  <% if (shows && shows.length > 0) { %>
+    <div class="row">
+    <% for (var i=0; i < shows.length; i++) { %>
+        <div class="col-sm-4">
+      		<div class="panel panel-default">
+        		<div class="panel-heading">
+          		<h3 class="panel-title"><%= shows[i].title %></h3></div>
+          		<div class="panel-body">
+            		<div class="media movie">
+                    <a class="pull-left" href="#">
+                      <img class="media-object" src="<%= shows[i].images.poster %>" alt="<%= shows[i].title %>">
+                    </a>
+                		<div class="media-body">
+                		    <p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/show?id=<%= shows[i].imdb_id %>"><span class="glyphicon glyphicon-play"></span> VIEW SHOW</a></p>
+                        <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http%3A%2F%2Fwww.imdb.com%2Ftitle%2F<%= shows[i].imdb_id %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
+          		          <p>Seasons: <%= shows[i].num_seasons %></p>
+                        <p>Year: <%= shows[i].year %></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% if (i % 3 === 2) { %>
+        </div><div class="row">
+      <% } %>
+    <% } %>
+  <% } else { %>
+    <p class="lead">No results found.</p>
+  <% } %>
+</div>
+<ul class="pager">
+  <li class="previous <%= previousDisabled %>"><a href="<%= previousPage %>">&larr; Previous</a></li>
+  <li class="next <%= nextDisabled %>"><a href="<%= nextPage %>">Next &rarr;</a></li>
+</ul>

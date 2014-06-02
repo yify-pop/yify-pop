@@ -17,6 +17,7 @@
 */
 
 var yify = require('../helpers/yify');
+var eztv = require('../helpers/eztv');
 var streams = require('../helpers/streams');
 
 var Main = function () {
@@ -48,6 +49,70 @@ var Main = function () {
         }, {
           format: 'html',
           template: 'app/views/main/index'
+        });
+      }
+    });
+  };
+
+  this.shows = function (req, resp, params) {
+    var self = this;
+    var request = require('request');
+    var baseURL = "http://" + req.headers.host;
+
+    var eztvRequest = eztv.getParams(params, baseURL);
+
+    request(eztvRequest.url, function (error, response, body) {
+      if (!error) {
+        var shows = JSON.parse(body);
+
+        self.respond({
+          params: params,
+          shows: shows,
+          baseURL: baseURL,
+          previousPage: eztvRequest.previousPage,
+          nextPage: eztvRequest.nextPage,
+          previousDisabled: eztvRequest.previousDisabled,
+          nextDisabled: eztvRequest.nextDisabled
+        }, {
+          format: 'html',
+          template: 'app/views/main/shows'
+        });
+      }
+    });
+  };
+
+  this.show = function (req, resp, params) {
+    var self = this;
+    var request = require('request');
+    var baseURL = "http://" + req.headers.host + '/';
+
+    request('http://popcorn-api.com/show/' + params.id, function (error, response, body) {
+      if (!error) {
+        var show = JSON.parse(body);
+
+        if (show.episodes) {
+          var seasons = [];
+          for (var i=0; i < show.episodes.length; i++) {
+            var seasonIndex = Number(show.episodes[i].season) - 1;
+            if (!seasons[seasonIndex]) {
+              seasons[seasonIndex] = [];
+            }
+
+            seasons[seasonIndex].push(show.episodes[i]);
+          }
+        } else {
+          seasons = [];
+        }
+        
+        self.respond({
+          params: params,
+          show: show,
+          episodes: show.episodes,
+          seasons: seasons,
+          baseURL: baseURL,
+        }, {
+          format: 'html',
+          template: 'app/views/main/show'
         });
       }
     });

@@ -8,8 +8,16 @@
   text-align: center;
 }
 
+.align-center {
+  text-align: center;
+}
+
 #movies .movie img {
   max-width: 120px;
+}
+
+#show .col-sm-4 {
+  margin-bottom:10px;
 }
 
 #navbar-collapse > form > .input-group {
@@ -21,7 +29,13 @@ img.media-object {
   padding: 3px;
   border: 4px solid #4C4C52;
   margin: 0 0 10px;
+  max-width: 150px;
 }
+
+.jumbotron img {
+  max-width:100%;
+}
+
 
 table a, .table a {
   color: #fff;
