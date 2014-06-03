@@ -68,11 +68,8 @@
     <div class="container">
       <%- displayFlash(flash); %>
       <%- render(); %>
-      <video id="player" class="hidden video-js vjs-default-skin center-block"
-        controls preload="auto" width="auto" height="auto" autoplay="true"
-        data-setup='{}'>
-        <source src="" type='video/mp4''>
-      </video>
+      <div class="player">
+      </div>
     </div>
   </body>
 <%= partial('layout_footer'); %>

@@ -1,6 +1,9 @@
 exports.create = function(self, streamURL, hostname, params) {
   var getport = require('getport');
   var request = require('request');
+  var AdmZip = require('adm-zip');
+  var http = require('http');
+  var fs = require('fs');
 
   var isWin = process.platform === 'win32';
 
@@ -19,6 +22,7 @@ exports.create = function(self, streamURL, hostname, params) {
       });
 
       streamURL = "http://" + hostname + ":" + port;
+      var subtitles = {};
 
       // if it's a movie
       if (!params.show || params.show !== '1') {
@@ -32,22 +36,70 @@ exports.create = function(self, streamURL, hostname, params) {
             data.peers = yifyResponse.TorrentPeers;
             data.cover = yifyResponse.MediumCover;
 
-            childStream.start(function(pid){
-              geddy.config.streamingProcesses.push({
-                pid: pid,
-                child: childStream,
-                torrent: decodeURIComponent(params.file),
-                stream: streamURL,
-                data: data
-              });
-            });
+            // fetch subtitles
+            request('http://api.yifysubtitles.com/subs/' + yifyResponse.ImdbCode, function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                var yifySubsResponse = JSON.parse(body);
 
-            self.respond({
-              params: params,
-              streamURL: streamURL
-            }, {
-              format: 'html',
-              template: 'app/views/main/stream'
+                // download a subtitle
+                function fetchSub (url, dest, lang, callBack) {
+                  var file = fs.createWriteStream(dest);
+                  var request = http.get(url, function(response) {
+                    response.pipe(file);
+                    file.on('finish', function() {
+                      file.close(callBack(dest, lang));
+                    });
+                  });
+                }
+
+                // unzip
+                function unzip (dest, lang) {
+                  var zip = new AdmZip(dest);
+                  var zipEntries = zip.getEntries();
+
+                  zipEntries.forEach(function(zipEntry) {
+                      var fileName = zipEntry.entryName.toString();
+                      var i = fileName.lastIndexOf('.');
+                      if (fileName.substr(i) == '.srt') { // Only unzip the srt file
+                        var dir = "public/subtitles/" + yifyResponse.MovieTitleClean + '/';
+                        zip.extractEntryTo(fileName, dir , false, true);
+                        fs.renameSync(dir + fileName, dir + lang + '.srt'); // Rename to language.srt
+                      }
+                      fs.unlinkSync(dest); // Remove the zip
+                  });
+                }
+
+                for (var subs in yifySubsResponse.subs) {
+                  for (var lang in yifySubsResponse.subs[subs]) {
+                    // TODO: Pick the highest rated sub
+                    var subUrl = 'http://www.yifysubtitles.com' + yifySubsResponse.subs[subs][lang][0].url;
+                    fetchSub(subUrl, 'public/subtitles/' + lang + '.zip', lang, unzip);
+                    // Build the subtitle url
+                    subtitles[lang] = 'http://' + hostname + ':4000' + '/subtitles/';
+                    subtitles[lang] += encodeURIComponent(yifyResponse.MovieTitleClean) + '/' + lang + '.srt';
+                  }
+                }
+
+                childStream.start(function(pid){
+                  geddy.config.streamingProcesses.push({
+                    pid: pid,
+                    child: childStream,
+                    torrent: decodeURIComponent(params.file),
+                    stream: streamURL,
+                    data: data,
+                    subtitles: subtitles
+                  });
+                });
+
+                self.respond({
+                  params: params,
+                  streamURL: streamURL,
+                  subtitles: subtitles
+                }, {
+                  format: 'html',
+                  template: 'app/views/main/stream'
+                });
+              }
             });
           }
         });
@@ -70,13 +122,15 @@ exports.create = function(self, streamURL, hostname, params) {
                 child: childStream,
                 torrent: decodeURIComponent(params.file),
                 stream: streamURL,
-                data: data
+                data: data,
+                subtitles: subtitles
               });
             });
 
             self.respond({
               params: params,
-              streamURL: streamURL
+              streamURL: streamURL,
+              subtitles: subtitles
             }, {
               format: 'html',
               template: 'app/views/main/stream'

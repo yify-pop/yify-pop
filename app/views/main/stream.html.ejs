@@ -17,6 +17,52 @@
 
 <script>
   var streamURL = "<%= streamURL %>";
+  var subs = <%- JSON.stringify(subtitles) %>;
+
+  var languageMapping = {
+    'albanian': 'sq',
+    'arabic': 'ar',
+    'bengali': 'bn',
+    'brazilian-portuguese': 'pt-br',
+    'bulgarian': 'bg',
+    'bosnian': 'bs',
+    'chinese': 'zh',
+    'croatian': 'hr',
+    'czech': 'cs',
+    'danish': 'da',
+    'dutch': 'nl',
+    'english': 'en',
+    'estonian': 'et',
+    'farsi-persian': 'fa',
+    'finnish': 'fi',
+    'french': 'fr',
+    'german': 'de',
+    'greek': 'el',
+    'hebrew': 'he',
+    'hungarian': 'hu',
+    'indonesian': 'id',
+    'italian': 'it',
+    'japanese': 'ja',
+    'korean': 'ko',
+    'lithuanian': 'lt',
+    'macedonian': 'mk',
+    'malay': 'ms',
+    'norwegian': 'no',
+    'polish': 'pl',
+    'portuguese': 'pt',
+    'romanian': 'ro',
+    'russian': 'ru',
+    'serbian': 'sr',
+    'slovenian': 'sl',
+    'spanish': 'es',
+    'swedish': 'sv',
+    'thai': 'th',
+    'turkish': 'tr',
+    'urdu': 'ur',
+    'ukrainian': 'uk',
+    'vietnamese': 'vi'
+  };
+
   $(document).ready(function() {
     setTimeout(function(){
       var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
@@ -25,9 +71,23 @@
         window.location.replace(streamURL);
       }
       else {
-        document.getElementById("player_html5_api").setAttribute("src", streamURL);
+
         $('.buffer-message').hide();
-        $('#player').removeClass('hidden');
+
+        var video = '<video id="player" class="video-js vjs-default-skin center-block" controls preload="auto" width="auto" height="auto" >';
+
+        video += '<source src=' + streamURL + ' type="video/mp4">';
+
+        for (var sub in subs) {
+          video += '<track kind="subtitles" src=' + subs[sub] + ' srclang=' + languageMapping[sub] + ' label=' + sub + '>';
+        }
+
+        video +=  '/></video>';
+
+        $('.player').append(video);
+        _V_('player');
+        _V_('player').play();
+
       }
       
     }, 3000);

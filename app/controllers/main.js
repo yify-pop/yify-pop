@@ -128,13 +128,15 @@ var Main = function () {
     for (var i=0; i < geddy.config.streamingProcesses.length; i++) {
       if (decodeURIComponent(params.file) === geddy.config.streamingProcesses[i].torrent) {
         streamURL = geddy.config.streamingProcesses[i].stream;
+        subtitles = geddy.config.streamingProcesses[i].subtitles;
       }
     }
 
     if (streamURL) {
       self.respond({
         params: params,
-        streamURL: streamURL
+        streamURL: streamURL,
+        subtitles: subtitles
       }, {
         format: 'html',
         template: 'app/views/main/stream'
@@ -162,10 +164,13 @@ var Main = function () {
 
   this.kill = function (req, resp, params) {
     var self = this;
+    var rimraf = require('rimraf').sync;
 
     if (params.pid && params.pid !== '') {
       for (var i=0; i < geddy.config.streamingProcesses.length; i++) {
         if (geddy.config.streamingProcesses[i].pid == params.pid) {
+          // Remove subtitles folder
+          rimraf('public/subtitles/' + geddy.config.streamingProcesses[i].data.title);
           geddy.config.streamingProcesses[i].child.stop();
           geddy.config.streamingProcesses.splice(i, 1);
           console.log('Child is now stopped.');

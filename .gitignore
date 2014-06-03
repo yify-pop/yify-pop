@@ -8,4 +8,5 @@ npm-debug.log
 config/secrets.json
 public/js/core/models.js
 public/js/core/helpers.js
+public/subtitles/
 _session_store.json

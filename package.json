@@ -6,7 +6,9 @@
     "request": "2.34.x",
     "child": "*",
     "getport": "0.1.x",
-    "moment": "*"
+    "moment": "*",
+    "adm-zip": "0.4.4",
+    "rimraf": "2.2.8",
   },
   "devDependencies": {},
   "engines": {
