@@ -31,6 +31,7 @@ var config = {
   , key: 'sid'
   , expiry: 14 * 24 * 60 * 60
   }
+, assetBasePath: '/'
 };
 
 module.exports = config;
