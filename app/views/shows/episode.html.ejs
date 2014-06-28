@@ -8,12 +8,18 @@
         <p class="lead">Season <%= episode.season %> - Episode <%= episode.episode %></p>
         <p><%= moment(episode.first_aired * 1000).format('LL') %></p>
         <p><%= episode.overview %></p>
-        <% if (episode.torrents && episode.torrents.length > 0) { %>
-          <% for (var k=0; k < episode.torrents.length; k++) { %>
-            <div class="well">
+        <% if (episode.torrents && Object.keys(episode.torrents).length > 0) { %>
+	  <br/>
+          <% for (var k in episode.torrents) { %>
+            <div class="text-center">
               <p>
-                <a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= imdb_id %>&show=1&season=<%= episode.season %>&episode=<%= episode.episode %>&file=<%= encodeURIComponent(episode.torrents[k].url) %>">
-                <span class="glyphicon glyphicon-play"></span> WATCH EPISODE</a>
+                <a class="btn btn-block btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= imdb_id %>&show=1&season=<%= episode.season %>&episode=<%= episode.episode %>&file=<%= encodeURIComponent(episode.torrents[k].url) %>">
+                  <span class="glyphicon glyphicon-play"></span>
+		  WATCH EPISODE
+		  <% if (k != 0 && k != '0') { %>
+		    (<%= k %>)
+		  <% } %>
+		</a>
               </p>
             </div>
           <% } %>

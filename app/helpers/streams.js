@@ -106,7 +106,7 @@ exports.create = function(self, streamURL, hostname, params) {
       }
       // else if it's a tv show
       else {
-        request('http://popcorn-api.com/show/' + params.id, function (error, response, body) {
+        request('http://eztvapi.re/show/' + params.id, function (error, response, body) {
           if (!error) {
             var show = JSON.parse(body);
 
