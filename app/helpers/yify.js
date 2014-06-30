@@ -21,6 +21,10 @@ exports.getParams = function (params, baseURL) {
     yify.search = '&keywords=' + params.search;
   }
 
+if (params.keywords && params.keywords !=='') {
+    yify.search = '&keywords=' + params.keywords;
+  }
+  
   var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
 
   yify.previousDisabled = 'disabled';
