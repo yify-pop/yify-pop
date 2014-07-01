@@ -2,6 +2,10 @@
   padding-top: 56.25%
 }
 
+.video-js .vjs-text-track-display {
+  font-size: 2.0em;
+}
+
 .watch {
   display: none;
   margin-top: 100px;
