@@ -4,6 +4,7 @@ exports.create = function(self, streamURL, hostname, params) {
   var AdmZip = require('adm-zip');
   var http = require('http');
   var fs = require('fs');
+  var opensrt = require('opensrt_js');
 
   var isWin = process.platform === 'win32';
 
@@ -116,25 +117,48 @@ exports.create = function(self, streamURL, hostname, params) {
             data.peers = '0';
             data.cover = show.images.poster;
 
-            childStream.start(function(pid){
-              geddy.config.streamingProcesses.push({
-                pid: pid,
-                child: childStream,
-                torrent: decodeURIComponent(params.file),
-                stream: streamURL,
-                data: data,
-                subtitles: subtitles
-              });
-            });
+            var fileName = params.file.split("&");
+            for (var i=0; i<fileName.length; i++) {
+               tmp = fileName[i].split("=");
+               if ( [tmp[0]] == "dn" ) { fileName = tmp[1]; }
+             }
 
-            self.respond({
-              params: params,
-              streamURL: streamURL,
-              subtitles: subtitles
-            }, {
-              format: 'html',
-              template: 'app/views/main/stream'
-            });
+            // prepare the query to fetch tv show subtitles
+            var query = {
+              imdbid: params.id,
+              season: params.seasons,
+              episode: params.episode,
+              filename: fileName
+            }
+
+            // Fetch subtitles
+            opensrt.searchEpisode(query, function(err, res){
+              if(err) return console.error("Error: " + err);
+
+              for (var lang in res) {
+                subtitles[lang] = res[lang].url;
+              }
+
+              childStream.start(function(pid){
+                geddy.config.streamingProcesses.push({
+                  pid: pid,
+                  child: childStream,
+                  torrent: decodeURIComponent(params.file),
+                  stream: streamURL,
+                  data: data,
+                  subtitles: subtitles
+                });
+              });
+
+              self.respond({
+                params: params,
+                streamURL: streamURL,
+                subtitles: subtitles
+              }, {
+                format: 'html',
+                template: 'app/views/main/stream'
+              });
+            })
           }
         });
       }
