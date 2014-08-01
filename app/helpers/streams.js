@@ -76,7 +76,7 @@ exports.create = function(self, streamURL, hostname, params) {
                     var subUrl = 'http://www.yifysubtitles.com' + yifySubsResponse.subs[subs][lang][0].url;
                     fetchSub(subUrl, 'public/subtitles/' + lang + '.zip', lang, unzip);
                     // Build the subtitle url
-                    subtitles[lang] = 'http://' + hostname + ':4000' + '/subtitles/';
+                    subtitles[lang] = 'http://' + hostname + ':' + geddy.config.port + '/subtitles/';
                     subtitles[lang] += encodeURIComponent(yifyResponse.MovieTitleClean) + '/' + lang + '.srt';
                   }
                 }
