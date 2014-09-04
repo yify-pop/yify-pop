@@ -1,4 +1,26 @@
 <%= partial('layout_header'); %>
+  <script>
+
+    function setTheme(theme) {
+      var today = new Date(), expires = new Date();
+      expires.setTime(today.getTime() + (365*24*60*60*1000)); //expires in one year
+      document.cookie="theme=" + theme + ";expires=" + expires.toGMTString();
+      document.getElementById('themeCss').href=theme;
+    }
+
+    $.get("http://api.bootswatch.com/3/", function (data) {
+      var themesList = document.getElementById('themes');
+
+      //Define the default theme
+      themesList.innerHTML += '<li ' +'onclick="setTheme(\'' + "//netdna.bootstrapcdn.com/bootswatch/latest/darkly/bootstrap.min.css" + '\')"><a href="#">Default (Darkly)</a></li>';
+      themesList.innerHTML += '<li class=divider </li>';
+
+      data.themes.forEach(function(value){
+        themesList.innerHTML += '<li ' +'onclick="setTheme(\'' + value.cssCdn + '\')">'  +  '<a href="#">' + value.name + '</a></li>';
+      });
+    });
+  </script>
+
   <body>
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container">
@@ -58,6 +80,13 @@
                 <li><a href="/?genre=thriller&sort=seeds">Thriller</a></li>
                 <li><a href="/?genre=war&sort=seeds">War</a></li>
                 <li><a href="/?genre=western&sort=seeds">Western</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Themes <b class="caret"></b>
+              </a>
+              <ul id="themes" class="dropdown-menu">
               </ul>
             </li>
             <li><a href="/running">Now Playing</a></li>

@@ -19,13 +19,32 @@
     <![endif]-->
 
     <%- scriptLink('jquery.min.js', {type:'text/javascript'}) %>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/latest/js/bootstrap.min.js"></script>
     <%- scriptLink('fastclick.js', {type: 'text/javascript'}) %>
     <%- scriptLink('config/init.js', {type: 'text/javascript'}) %>
     <%- scriptLink('video.js', {type: 'text/javascript'}) %>
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+    function getCookie(sName) {
+      var oRegex = new RegExp("(?:; )?" + sName + "=([^;]*);?");
+      if (oRegex.test(document.cookie)) {
+        return decodeURIComponent(RegExp["$1"]);
+      } else {
+        return null;
+      }
+    }
+
+    var theme = getCookie("theme");
+    if(theme != null) {
+      document.write('<link id="themeCss" rel="stylesheet" href=' + theme + '>');
+    }
+    else { // use the default theme
+      document.write('<link id="themeCss" href="//netdna.bootstrapcdn.com/bootswatch/latest/darkly/bootstrap.min.css" rel="stylesheet">');
+    }
+    </script>
+
     <%- styleLink('video-js/video-js.css', {rel:'stylesheet'}) %>
     <%- styleLink('style.css', {rel:'stylesheet'}) %>
 
