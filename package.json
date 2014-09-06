@@ -9,7 +9,8 @@
     "moment": "*",
     "adm-zip": "0.4.4",
     "rimraf": "2.2.8",
-    "opensrt_js": "0.0.16"
+    "opensrt_js": "0.0.16",
+    "underscore": "1.7.0"
   },
   "devDependencies": {},
   "engines": {
