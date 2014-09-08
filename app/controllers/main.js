@@ -107,7 +107,14 @@ var Main = function () {
         if (geddy.config.streamingProcesses[i].pid == params.pid) {
           // Remove subtitles folder
           rimraf('public/subtitles/' + geddy.config.streamingProcesses[i].data.title);
-          geddy.config.streamingProcesses[i].child.stop();
+          if(process.platform == 'win32'){
+            var exec = require('child_process').exec,
+            child;
+            child = exec('taskkill /pid ' + params.pid +' /t /f');
+          }
+          else{
+            geddy.config.streamingProcesses[i].child.stop();
+          }
           geddy.config.streamingProcesses.splice(i, 1);
           console.log('Child is now stopped.');
         }
