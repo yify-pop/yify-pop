@@ -19,8 +19,14 @@
 var yify = require('../helpers/yify');
 var eztv = require('../helpers/eztv');
 var streams = require('../helpers/streams');
+var passport = require('../helpers/passport')
+  , requireAuth = passport.requireAuth;
 
 var Main = function () {
+  this.before(requireAuth, {
+    except: ['login']
+  });
+
   this.index = function (req, resp, params) {
     var self = this;
     var request = require('request');
@@ -30,8 +36,15 @@ var Main = function () {
 
     request(yifyRequest.url, function (error, response, body) {
       if (!error && response.statusCode == 200) {
+        var yifyResponse = {};
 
-        var yifyResponse = JSON.parse(body);
+        try {
+          yifyResponse = JSON.parse(body);
+        } catch (error) {
+          console.log(error);
+          yifyResponse.MovieCount = 0;
+          yifyResponse.MovieList = [];
+        }
 
         if (yifyResponse.MovieCount < (yify.page * 18)) {
           nextDisabled = 'disabled';
@@ -51,6 +64,22 @@ var Main = function () {
           template: 'app/views/main/index'
         });
       }
+    });
+  };
+
+  this.login = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/login'
+    });
+  };
+
+  this.logout = function (req, resp, params) {
+    this.session.unset('userId');
+    this.session.unset('authType');
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/logout'
     });
   };
 

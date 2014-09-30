@@ -44,4 +44,9 @@ router.get('/kill').to('Main.kill');
 //   this.get('/print(.:format)').to('Hemispheres.print');
 // });
 
+
+router.get('/login').to('Main.login');
+router.get('/logout').to('Main.logout');
+router.post('/auth/local').to('Auth.local');
+router.resource('users');
 exports.router = router;
