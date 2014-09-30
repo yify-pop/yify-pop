@@ -12,11 +12,8 @@
     "opensrt_js": "0.0.16",
     "jake": "0.5.x",
     "passport": "0.1.x",
-    "passport-twitter": "0.1.x",
-    "passport-facebook": "0.1.x",
-    "passport-yammer": "0.1.x",
     "bcrypt": "0.7.x",
-	"underscore": "1.7.0"
+	  "underscore": "1.7.0"
   },
   "devDependencies": {},
   "engines": {

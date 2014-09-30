@@ -32,6 +32,10 @@ var config = {
   , expiry: 14 * 24 * 60 * 60
   }
 , assetBasePath: '/'
+, passport: {
+    successRedirect: "/",
+    failureRedirect: "/login",
+  }
 };
 
 module.exports = config;
