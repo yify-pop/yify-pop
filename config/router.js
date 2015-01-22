@@ -19,12 +19,12 @@
 
 var router = new geddy.RegExpRouter();
 
-router.get('/').to('Main.index');
+router.get('/').to('Movies.index');
 router.get('/shows').to('Shows.index');
 router.get('/show').to('Shows.show');
-router.get('/stream').to('Main.stream');
-router.get('/running').to('Main.running');
-router.get('/kill').to('Main.kill');
+router.get('/stream').to('Movies.stream');
+router.get('/running').to('Movies.running');
+router.get('/kill').to('Movies.kill');
 
 // Basic routes
 // router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');

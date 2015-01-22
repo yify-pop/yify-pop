@@ -90,6 +90,9 @@
               </ul>
             </li>
             <li><a href="/running">Now Playing</a></li>
+            <% if (session.get('userId')) { %>
+              <li><a href="/logout">Logout</a></li>
+            <% } %>
           </ul>
         </div>
       </div>

@@ -4,25 +4,6 @@ var passport = require('../helpers/passport')
 
 
 var Users = function () {
-
-  // Set this to false if you don't need e-mail activation
-  // for local users
-  var EMAIL_ACTIVATION = true
-    , msg;
-
-  if (EMAIL_ACTIVATION) {
-    if (!geddy.mailer) {
-      msg = 'E-mail activation requires a mailer. ' +
-          'Please configure a mailer for your app.';
-      throw new Error(msg);
-    }
-    if (!geddy.config.fullHostname) {
-      msg = 'E-mail activation requires a hostname for the ' +
-          'activation URL. Please set "hostname" in your app config.';
-      throw new Error(msg);
-    }
-  }
-
   this.before(requireAuth, {
     except: ['add', 'create', 'activate']
   });
@@ -61,52 +42,10 @@ var Users = function () {
       else {
         if (user.isValid()) {
           user.password = generateHash(user.password);
-
-          if (EMAIL_ACTIVATION) {
-            user.activationToken = generateHash(user.email);
-          }
-          else {
-            user.activatedAt = new Date();
-          }
+          user.activatedAt = new Date();
           user.save(function(err, data) {
-            var options = {}
-              , mailOptions
-              , mailCallback
-              , mailHtml
-              , mailText;
-
             if (err) {
               throw err;
-            }
-
-            if (EMAIL_ACTIVATION) {
-              activationUrl = geddy.config.fullHostname + '/users/activate?token=' +
-                  encodeURIComponent(user.activationToken);
-              options.status = 'You have successfully signed up. ' +
-                  'Check your e-mail to activate your account.';
-
-              mailHtml = 'Welcome to ' + geddy.config.appName + '. ' +
-                  'Use the following URL to activate your account: ' +
-                  '<a href="' + activationUrl + '">' + activationUrl + '</a>.';
-              mailText = 'Welcome to ' + geddy.config.appName + '. ' +
-                  'Use the following URL to activate your account: ' +
-                  activationUrl + '.';
-
-              mailOptions = {
-                from: geddy.config.mailer.fromAddressUsername + '@' +
-                    geddy.config.hostname
-              , to: user.email
-              , subject: 'Welcome to ' + geddy.config.appName
-              , html: mailHtml
-              , text: mailText
-              };
-              mailCallback = function (err, data) {
-                if (err) {
-                  throw err;
-                }
-                self.respondWith(user, options);
-              };
-              geddy.mailer.sendMail(mailOptions, mailCallback);
             }
 
             else {
@@ -118,30 +57,6 @@ var Users = function () {
           self.respondWith(user, {status: err});
         }
       }
-    });
-
-  };
-
-  this.activate = function (req, res, params) {
-    var self = this
-      , token = decodeURIComponent(params.token);
-
-    geddy.model.User.first({activationToken: token}, function(err, user) {
-      if (err) {
-        throw err;
-      }
-      if (!user) {
-        throw new geddy.errors.NotFoundError(
-            'Sorry, couldn\'t find the user with that activation code.');
-      }
-      user.activatedAt = new Date();
-      user.save(function (err) {
-        if (err) {
-          throw err;
-        }
-        self.flash.success('Congrats. Your account has been activated. You may now log in.');
-        self.redirect('/login');
-      });
     });
 
   };

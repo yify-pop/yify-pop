@@ -18,8 +18,14 @@
 
 var eztvHelper = require('../helpers/eztv');
 var moment = require('moment');
+var passport = require('../helpers/passport')
+, requireAuth = passport.requireAuth;
 
 var Shows = function () {
+  if (geddy.config.private) {
+    this.before(requireAuth);
+  }
+
   this.index = function (req, resp, params) {
     var self = this;
     var request = require('request');
