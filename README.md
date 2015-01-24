@@ -27,8 +27,10 @@ Getting Started
 
 2. Run `npm install` to install dependencies
 
-3. Run `geddy` to start the server
+3. Run `geddy gen secret` to generate a unique secret
 
-4. Visit http://localhost:4000 in your browser
+4. Run `geddy` to start the server
+
+5. Visit [http://localhost:4000](http://localhost:4000) in your browser
 
 Enjoy!
