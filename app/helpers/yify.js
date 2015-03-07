@@ -18,14 +18,14 @@ exports.getParams = function (params, baseURL) {
   }
 
   if (params.search && params.search !== '') {
-    yify.search = '&query_term=' + params.search;
+    yify.search = params.search;
   }
 
 if (params.keywords && params.keywords !=='') {
-    yify.search = '&query_term=' + params.keywords;
+    yify.search = params.keywords;
   }
   
-  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
+  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + '&search=' + yify.search;
 
   yify.previousDisabled = 'disabled';
   yify.nextDisabled = '';
@@ -53,7 +53,7 @@ if (params.keywords && params.keywords !=='') {
   //  yify.url = 'http://yts.re/api/list.json?limit=18&quality=720p&sort=';
   // API V2
   yify.url = 'https://yts.re/api/v2/list_movies.json?limit=18&quality=720p&sort_by=';
-  yify.url += yify.sort + '&genre=' + yify.genre + yify.search + yify.set;
+  yify.url += yify.sort + '&genre=' + yify.genre + '&query_term=' + yify.search + yify.set;
 
   return yify;
 };
