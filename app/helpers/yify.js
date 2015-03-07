@@ -25,7 +25,7 @@ if (params.keywords && params.keywords !=='') {
     yify.search = '&query_term=' + params.keywords;
   }
   
-  var oldURL = baseURL + '?sort_by=' + yify.sort + '&genre=' + yify.genre + yify.search;
+  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
 
   yify.previousDisabled = 'disabled';
   yify.nextDisabled = '';

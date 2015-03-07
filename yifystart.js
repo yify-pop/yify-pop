@@ -6,5 +6,4 @@ var geddy = require('geddy');
 geddy.startCluster({
   // Configuration here
     environment: 'development'
-    , workers: 1
 });
