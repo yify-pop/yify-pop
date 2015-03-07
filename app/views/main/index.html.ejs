@@ -10,11 +10,11 @@
 		<div class="panel-body">
         
 		<div class="media movie">
-        <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].TorrentUrl) %>">
+        <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].TorrentUrl) %>">
         <img class="media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></a>
 		
 		<div class="media-body">
-		<p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= movies[i].MovieID %>&file=<%= encodeURIComponent(movies[i].torrents[0].url) %>" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+		<p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].url) %>" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
         <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http://www.imdb.com/title/<%= movies[i].imdb_code %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
 
 		<div class="well well-sm">
