@@ -28,18 +28,19 @@ exports.create = function(self, streamURL, hostname, params) {
 
       // if it's a movie
       if (!params.show || params.show !== '1') {
-        request('http://yts.re/api/movie.json?id=' + params.id, function (error, response, body) {
+        request('https://yts.re/api/v2/movie_details.json?movie_id=' + params.id, function (error, response, body) {
           if (!error && response.statusCode == 200) {
             var yifyResponse = JSON.parse(body);
 
             var data = {};
-            data.title = yifyResponse.MovieTitleClean;
-            data.seeds = yifyResponse.TorrentSeeds;
-            data.peers = yifyResponse.TorrentPeers;
-            data.cover = yifyResponse.MediumCover;
+            data.title = yifyResponse.data.title;
+            data.seeds = yifyResponse.data.torrents[0].seeds;
+            data.peers = yifyResponse.data.torrents[0].peers;
+                        
+                        //data.cover = yifyResponse.MediumCover;
 
             // fetch subtitles
-            request('http://api.yifysubtitles.com/subs/' + yifyResponse.ImdbCode, function (error, response, body) {
+            request('http://api.yifysubtitles.com/subs/' + yifyResponse.data.imdb_code, function (error, response, body) {
               if (!error && response.statusCode == 200) {
                 var yifySubsResponse = JSON.parse(body);
 

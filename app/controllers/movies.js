@@ -42,18 +42,17 @@ var Movies = function () {
           yifyResponse = JSON.parse(body);
         } catch (error) {
           console.log(error);
-          yifyResponse.MovieCount = 0;
-          yifyResponse.MovieList = [];
-        }
-
-        if (yifyResponse.MovieCount < (yify.page * 18)) {
+          yifyResponse.data.movie_count = 0;
+          yifyResponse.data.movies = [];
+                }
+        if (yifyResponse.data.movie_count > (yify.page * 18)) {
           nextDisabled = 'disabled';
           nextPage = '#';
         }
 
         self.respond({
           params: params,
-          movies: yifyResponse.MovieList,
+          movies: yifyResponse.data.movies,
           baseURL: baseURL,
           previousPage: yifyRequest.previousPage,
           nextPage: yifyRequest.nextPage,
