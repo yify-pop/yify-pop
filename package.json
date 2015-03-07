@@ -1,6 +1,6 @@
 {
-  "name": "yify-pop with APIV2",
-  "version": "0.0.2",
+  "name": "yify-pop",
+  "version": "0.0.1",
     "author": "",
   "dependencies": {
     "request": "2.34.x",

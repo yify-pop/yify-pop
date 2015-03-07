@@ -3,7 +3,7 @@ exports.getParams = function (params, baseURL) {
 
   // Set Defaults
   yify.search = '';
-  yify.sort = 'date';
+  yify.sort = 'date_added';
   yify.genre = 'all';
   yify.page = 1;
   yify.set = '&set=1';
@@ -18,14 +18,14 @@ exports.getParams = function (params, baseURL) {
   }
 
   if (params.search && params.search !== '') {
-    yify.search = '&keywords=' + params.search;
+    yify.search = '&query_term=' + params.search;
   }
 
 if (params.keywords && params.keywords !=='') {
-    yify.search = '&keywords=' + params.keywords;
+    yify.search = '&query_term=' + params.keywords;
   }
   
-  var oldURL = baseURL + '?sort=' + yify.sort + '&genre=' + yify.genre + yify.search;
+  var oldURL = baseURL + '?sort_by=' + yify.sort + '&genre=' + yify.genre + yify.search;
 
   yify.previousDisabled = 'disabled';
   yify.nextDisabled = '';
@@ -34,7 +34,7 @@ if (params.keywords && params.keywords !=='') {
 
   // Update paging links
   if (params.set && params.set !== '') {
-    yify.set = '&set=' + params.set;
+    yify.set = '&page=' + params.set;
     yify.page = parseInt(params.set);
 
     yify.previousPage = oldURL + '&set=' + (yify.page - 1);
@@ -52,7 +52,7 @@ if (params.keywords && params.keywords !=='') {
   // API V1
   //  yify.url = 'http://yts.re/api/list.json?limit=18&quality=720p&sort=';
   // API V2
-  yify.url = 'https://yts.re/api/v2/list_movies.json?limit=18&quality=720p&sort=';
+  yify.url = 'https://yts.re/api/v2/list_movies.json?limit=18&quality=720p&sort_by=';
   yify.url += yify.sort + '&genre=' + yify.genre + yify.search + yify.set;
 
   return yify;
