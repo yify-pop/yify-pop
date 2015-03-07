@@ -48,8 +48,11 @@ if (params.keywords && params.keywords !=='') {
     yify.nextPage = oldURL + '&set=' + (yify.page + 1);
   }
 
-  // Set request URL
-  yify.url = 'http://yts.re/api/list.json?limit=18&quality=720p&sort=';
+    // Set request URL
+  // API V1
+  //  yify.url = 'http://yts.re/api/list.json?limit=18&quality=720p&sort=';
+  // API V2
+  yify.url = 'https://yts.re/api/v2/list_movies.json?limit=18&quality=720p&sort=';
   yify.url += yify.sort + '&genre=' + yify.genre + yify.search + yify.set;
 
   return yify;
