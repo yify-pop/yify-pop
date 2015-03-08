@@ -65,7 +65,7 @@ exports.create = function(self, streamURL, hostname, params) {
                       var fileName = zipEntry.entryName.toString();
                       var i = fileName.lastIndexOf('.');
                       if (fileName.substr(i) == '.srt') { // Only unzip the srt file
-                        var dir = "public/subtitles/" + yifyResponse.MovieTitleClean + '/';
+                        var dir = "public/subtitles/" + yifyResponse.data.title + '/';
                         zip.extractEntryTo(fileName, dir , false, true);
                         fs.renameSync(dir + fileName, dir + lang + '.srt'); // Rename to language.srt
                       }
@@ -79,7 +79,7 @@ exports.create = function(self, streamURL, hostname, params) {
                     fetchSub(subUrl, 'public/subtitles/' + lang + '.zip', lang, unzip);
                     // Build the subtitle url
                     subtitles[lang] = 'http://' + hostname + ':' + geddy.config.port + '/subtitles/';
-                    subtitles[lang] += encodeURIComponent(yifyResponse.MovieTitleClean) + '/' + lang + '.srt';
+                    subtitles[lang] += encodeURIComponent(yifyResponse.data.title) + '/' + lang + '.srt';
                   }
                 }
 
