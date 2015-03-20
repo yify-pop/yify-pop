@@ -28,7 +28,7 @@ exports.create = function(self, streamURL, hostname, params) {
 
       // if it's a movie
       if (!params.show || params.show !== '1') {
-        request('https://yts.re/api/v2/movie_details.json?with_images=true&movie_id=' + params.id, function (error, response, body) {
+        request('https://yts.to/api/v2/movie_details.json?with_images=true&movie_id=' + params.id, function (error, response, body) {
           if (!error && response.statusCode == 200) {
             var yifyResponse = JSON.parse(body);
 
