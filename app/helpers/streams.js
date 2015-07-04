@@ -18,6 +18,7 @@ exports.create = function(self, streamURL, hostname, params) {
       var childStream = require('child')({
         command: osSpecificCommand,
         args: osSpecificArgs,
+        options: [],
         cbStdout: function(data) {
           console.log(String(data));
         }
