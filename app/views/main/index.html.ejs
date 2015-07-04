@@ -10,17 +10,19 @@
 		<div class="panel-body">
         
 		<div class="media movie">
-        <a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].TorrentUrl) %>">
-        <img class="media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></a>
+        <%if (movies[i].state=='ok'){%><a class="pull-left" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].TorrentUrl) %>">
+        <img class="media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></a><%}else{%>
+            <div class="pull-left"><img class=" media-object" src="<%= movies[i].medium_cover_image %>" alt="<%= movies[i].title %>"></div>
+            <%}%>
 		
 		<div class="media-body">
-		<p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].url) %>" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p>
+        <%if (movies[i].state=='ok'){%><p><a class="btn btn-sm btn-warning" href="<%= baseURL %>/stream?id=<%= movies[i].id %>&file=<%= encodeURIComponent(movies[i].torrents[0].url) %>" target="_blank"><span class="glyphicon glyphicon-play"></span> PLAY MOVIE</a></p><%}%>
         <p><a class="btn btn-xs btn-default" href="http://www.dereferer.org/?http://www.imdb.com/title/<%= movies[i].imdb_code %>" target="_blank" ><span class="glyphicon glyphicon-facetime-video"></span> IMDB</a></p>
 
 		<div class="well well-sm">
 		Rating: <%= movies[i].rating %><br>
 		Genre: <%= movies[i].genres %><br>
-		Health: <span class="label label-default">S: <%= movies[i].torrents[0].seeds %></span> <span class="label label-default">P: <%= movies[i].torrents[0].peers %></span>
+        <%if (movies[i].state=='ok'){%>Health: <span class="label label-default">S: <%= movies[i].torrents[0].seeds %></span> <span class="label label-default">P: <%= movies[i].torrents[0].peers %></span><%}%>
 		</div>
 		
 		</div></div></div></div></div>
