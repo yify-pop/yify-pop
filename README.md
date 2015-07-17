@@ -1,5 +1,7 @@
 yify-pop
 ========
+
+[![Join the chat at https://gitter.im/yify-pop/yify-pop](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yify-pop/yify-pop?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Dependency Status](https://david-dm.org/yify-pop/yify-pop.svg)](https://david-dm.org/yify-pop/yify-pop)  [![Code Climate](https://codeclimate.com/github/yify-pop/yify-pop/badges/gpa.svg)](https://codeclimate.com/github/yify-pop/yify-pop)  
 Inspired by popcorn-app, a node web server to stream torrents from yify. Built using Geddy and the peerflix library.
 
