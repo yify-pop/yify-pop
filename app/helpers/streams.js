@@ -29,20 +29,20 @@ exports.create = function(self, streamURL, hostname, params) {
 
       // if it's a movie
       if (!params.show || params.show !== '1') {
-        request('https://yts.to/api/v2/movie_details.json?with_images=true&movie_id=' + params.id, function (error, response, body) {
+        request('https://yts.ag/api/v2/movie_details.json?with_images=true&movie_id=' + params.id, function (error, response, body) {
           if (!error && response.statusCode == 200) {
             var yifyResponse = JSON.parse(body);
 
             var data = {};
-            data.title = yifyResponse.data.title;
-            data.seeds = yifyResponse.data.torrents[0].seeds;
-            data.peers = yifyResponse.data.torrents[0].peers;
-                    
-            // IMAGE : MEDIUM              
-            data.cover = yifyResponse.data.images.medium_cover_image;
+            data.title = yifyResponse.data.movie.title;
+            data.seeds = yifyResponse.data.movie.torrents[0].seeds;
+            data.peers = yifyResponse.data.movie.torrents[0].peers;
+
+            // IMAGE : MEDIUM
+            data.cover = yifyResponse.data.movie.medium_cover_image;
 
             // fetch subtitles
-            request('http://api.yifysubtitles.com/subs/' + yifyResponse.data.imdb_code, function (error, response, body) {
+            request('http://api.yifysubtitles.com/subs/' + yifyResponse.data.movie.imdb_code, function (error, response, body) {
               if (!error && response.statusCode == 200) {
                 var yifySubsResponse = JSON.parse(body);
 
@@ -66,7 +66,7 @@ exports.create = function(self, streamURL, hostname, params) {
                       var fileName = zipEntry.entryName.toString();
                       var i = fileName.lastIndexOf('.');
                       if (fileName.substr(i) == '.srt') { // Only unzip the srt file
-                        var dir = "public/subtitles/" + yifyResponse.data.title + '/';
+                        var dir = "public/subtitles/" + yifyResponse.data.movie.title + '/';
                         zip.extractEntryTo(fileName, dir , false, true);
                         fs.renameSync(dir + fileName, dir + lang + '.srt'); // Rename to language.srt
                       }
@@ -80,7 +80,7 @@ exports.create = function(self, streamURL, hostname, params) {
                     fetchSub(subUrl, 'public/subtitles/' + lang + '.zip', lang, unzip);
                     // Build the subtitle url
                     subtitles[lang] = 'http://' + hostname + ':' + geddy.config.port + '/subtitles/';
-                    subtitles[lang] += encodeURIComponent(yifyResponse.data.title) + '/' + lang + '.srt';
+                    subtitles[lang] += encodeURIComponent(yifyResponse.data.movie.title) + '/' + lang + '.srt';
                   }
                 }
 
